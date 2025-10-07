@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql:8
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: logisticsdb
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend/RutasLogisticas
+      dockerfile: Dockerfile
+    container_name: spring_backend
+    restart: always
+    ports:
+      - "${BACKEND_PORT}:8080"
+    env_file: .env
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend/frontend-app
+      dockerfile: Dockerfile
+    container_name: angular_frontend
+    restart: always
+    ports:
+      - "${FRONTEND_PORT}:80"
+    env_file: .env
+    depends_on:
+    - backend
+
+volumes:
+  db_data:
