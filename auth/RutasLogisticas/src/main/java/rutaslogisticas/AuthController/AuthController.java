@@ -25,7 +25,6 @@ import rutaslogisticas.entity.User;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "*") // para Angular en dev
 public class AuthController {
 
   private final AuthenticationManager authManager;

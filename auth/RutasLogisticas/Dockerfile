@@ -1,26 +1,27 @@
-# ---------- Etapa 1: Construcción con Maven ----------
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# syntax=docker/dockerfile:1
+
+# --- Etapa de build (Maven + JDK 21)
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copiamos el pom.xml y descargamos dependencias (esto se cachea)
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
+# Copiamos el proyecto Maven que está en ./auth/RutasLogisticas
+COPY RutasLogisticas/pom.xml .
+COPY RutasLogisticas/src ./src
 
-# Copiamos el código fuente
-COPY src ./src
+# Compilar (sin tests)
+RUN mvn -q -DskipTests package
 
-# Compilamos y empaquetamos (genera un .jar en target/)
-RUN mvn clean package -DskipTests
-
-# ---------- Etapa 2: Imagen final con JDK ----------
-FROM eclipse-temurin:17-jdk
+# --- Runtime (JRE 21)
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-# Copiamos el jar generado en la etapa anterior
+# Copiar el jar construido
 COPY --from=build /app/target/*.jar app.jar
 
-# Puerto expuesto por Spring Boot
-EXPOSE 8080
+# Spring mapea SERVER_PORT -> server.port automáticamente
+ENV SERVER_PORT=8081
+EXPOSE 8081
 
-# Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","/app/app.jar"]
+
+

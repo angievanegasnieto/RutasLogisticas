@@ -35,7 +35,9 @@ services:
       - gateway
 
   auth-service:
-    build: ./auth
+    build:
+      context: ./auth/RutasLogisticas
+      dockerfile: Dockerfile
     container_name: auth_service
     environment:
       SERVER_PORT: 8081
@@ -43,9 +45,10 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     ports:
-      - "${AUTH_PORT}:8081"
+    - "${AUTH_PORT}:8081"
     depends_on:
       - db
+
 
   gateway:
     build: ./gateway

@@ -1,50 +1,45 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>rutaslogisticas</groupId>
-  <artifactId>backend</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>backend</name>
-  <description>Proyecto Rutas Logísticas - Backend</description>
-  <packaging>jar</packaging>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.3.2</version>
-    <relativePath/>
+    <version>3.4.10</version>
   </parent>
 
+  <groupId>rutaslogisticas</groupId>
+  <artifactId>auth-service</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>auth-service</name>
+  <description>Microservicio de Autenticación</description>
+
   <properties>
-    <java.version>21</java.version>
+    <java.version>17</java.version>
+    <!-- Clase principal (ajústala si tu main tiene otro nombre/paquete) -->
+    <start-class>rutaslogisticas.RutasLogisticas</start-class>
+    <!-- Versión de JJWT usada por JwtUtil/JwtAuthFilter -->
+    <jjwt.version>0.11.5</jjwt.version>
   </properties>
 
   <dependencies>
-    <!-- REST -->
+    <!-- Web REST -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- Seguridad (necesario para JWT, password encoder, filtros) -->
+    <!-- Seguridad (Spring Security) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
-    <!-- JPA / Hibernate -->
+    <!-- JPA/Hibernate -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-
-    <!-- Validación de DTOs (@Valid, @NotBlank, etc.) -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
     <!-- Conector MySQL -->
@@ -54,29 +49,41 @@
       <scope>runtime</scope>
     </dependency>
 
-    <!-- JSON Web Tokens -->
+    <!-- Validaciones @NotNull, @Email, etc. -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+
+    <!-- JWT (coincide con util/clases del repo) -->
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>
-      <version>0.11.5</version>
+      <version>${jjwt.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-impl</artifactId>
-      <version>0.11.5</version>
+      <version>${jjwt.version}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-jackson</artifactId>
-      <version>0.11.5</version>
+      <version>${jjwt.version}</version>
       <scope>runtime</scope>
     </dependency>
 
-    <!-- Devtools (opcional en desarrollo) -->
+    <!-- Actuator (health/info) -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+
+    <!-- (Opcional) Lombok; instala el plugin en NetBeans si lo usas -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
 
@@ -86,19 +93,6 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-
-    <!-- (Opcional) Lombok para getters/setters -->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <!-- (Opcional) Actuator para /actuator/health -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
   </dependencies>
 
   <build>
@@ -106,17 +100,13 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <!-- Permite detectar la clase main desde <start-class> -->
         <configuration>
-          <excludes>
-            <!-- evita incluir devtools en el jar final -->
-            <exclude>
-              <groupId>org.springframework.boot</groupId>
-              <artifactId>spring-boot-devtools</artifactId>
-            </exclude>
-          </excludes>
+          <mainClass>${start-class}</mainClass>
         </configuration>
       </plugin>
     </plugins>
   </build>
 </project>
+
 

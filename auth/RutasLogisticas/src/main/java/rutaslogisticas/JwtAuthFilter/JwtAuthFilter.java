@@ -32,10 +32,12 @@ public class JwtAuthFilter extends org.springframework.web.filter.OncePerRequest
 
   // Rutas públicas (ajústalas según tu API)
   private static final List<RequestMatcher> PUBLIC = List.of(
-      new AntPathRequestMatcher("/auth/**"),
-      new AntPathRequestMatcher("/actuator/health"),
-      new AntPathRequestMatcher("/api/users", "POST") // crear usuario sin token
-  );
+    new AntPathRequestMatcher("/auth/login", "POST"),
+    new AntPathRequestMatcher("/auth/register", "POST"),
+    new AntPathRequestMatcher("/auth/ping", "GET"),
+    new AntPathRequestMatcher("/actuator/health", "GET")
+);
+
 
   public JwtAuthFilter(JwtUtil jwt, CustomUserDetailsService uds) {
     this.jwt = jwt;
