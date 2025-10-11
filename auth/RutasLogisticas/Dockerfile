@@ -1,5 +1,5 @@
 # ---------- Etapa 1: Construcción con Maven ----------
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copiamos el pom.xml y descargamos dependencias (esto se cachea)
@@ -13,7 +13,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # ---------- Etapa 2: Imagen final con JDK ----------
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:21-jdk
 WORKDIR /app
 
 # Copiamos el jar generado en la etapa anterior
