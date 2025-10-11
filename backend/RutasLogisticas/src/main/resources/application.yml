@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: fleet
+            uri: http://fleet_service:8080
+            predicates:
+              - Path=/api/vehicles/**,/api/drivers/**
+
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: INFO
