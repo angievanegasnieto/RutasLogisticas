@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import rutaslogisticas.Auth.AuthResponse;
 import rutaslogisticas.AuthService.AuthService;
 import rutaslogisticas.Login.LoginRequest;
@@ -63,5 +64,27 @@ public class AuthController {
     if (authentication == null) return ResponseEntity.status(401).build();
     User u = authService.getByEmail(authentication.getName());
     return ResponseEntity.ok(new UserView(u.getId(), u.getName(), u.getEmail(), u.getRole()));
+  }
+
+  @GetMapping("/users")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<?> listUsers() {
+    var users = authService.listUsers();
+    return ResponseEntity.ok(users.stream().map(u -> new UserView(u.getId(), u.getName(), u.getEmail(), u.getRole())).toList());
+  }
+
+  // Temporary public debug endpoint to verify DB connectivity from frontend.
+  // NOTE: This is intentionally unprotected and should be removed in production.
+  @GetMapping("/users/debug")
+  public ResponseEntity<?> listUsersDebug() {
+    var users = authService.listUsers();
+    return ResponseEntity.ok(users.stream().map(u -> new UserView(u.getId(), u.getName(), u.getEmail(), u.getRole())).toList());
+  }
+
+  @DeleteMapping("/users/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
+  public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    authService.deleteById(id);
+    return ResponseEntity.noContent().build();
   }
 }

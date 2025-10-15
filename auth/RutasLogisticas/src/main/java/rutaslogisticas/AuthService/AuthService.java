@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import rutaslogisticas.JwtUtil.JwtUtil;
 import rutaslogisticas.Repository.UserRepository;
 import rutaslogisticas.entity.User;
+import java.util.List;
 
 @Service
 public class AuthService {
@@ -38,6 +39,15 @@ public class AuthService {
 
   public User getByEmail(String email) {
     return repo.findByEmail(email).orElseThrow();
+  }
+
+  // Admin operations
+  public List<User> listUsers() {
+    return repo.findAll();
+  }
+
+  public void deleteById(Long id) {
+    repo.deleteById(id);
   }
 }
 
