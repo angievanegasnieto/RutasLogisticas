@@ -1,12 +1,17 @@
 import { Component, computed, inject } from "@angular/core";
-import { RouterOutlet, RouterLink, Router } from "@angular/router";
+import {
+  RouterOutlet,
+  RouterLink,
+  Router,
+  RouterLinkActive,
+} from "@angular/router";
 import { AuthService } from "./core/auth.service";
 import { NgIf } from "@angular/common";
 
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [RouterOutlet, RouterLink, NgIf],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf],
   template: `
     <nav class="container">
       <a routerLink="/" class="brand">🚚 Rutas</a>
