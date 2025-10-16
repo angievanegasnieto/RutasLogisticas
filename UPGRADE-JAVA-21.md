@@ -1,4 +1,4 @@
-Upgrade to Java 21 (LTS)
+# Upgrade to Java 21 (LTS)
 
 This repository has been updated to target Java 21. The `pom.xml` files for `auth` and `gateway` were changed to set `<java.version>21` and to add the `maven-compiler-plugin` configured with `release ${java.version}`.
 

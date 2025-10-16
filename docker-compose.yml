@@ -10,6 +10,7 @@ services:
       - "${MYSQL_PORT}:3306"
     volumes:
       - db_data:/var/lib/mysql
+      - ./db/isql:/docker-entrypoint-initdb.d/init.sql:ro
 
   backend:
     build:
@@ -23,6 +24,31 @@ services:
     depends_on:
       - db
 
+  auth-service:
+    build:
+      context: ./auth/RutasLogisticas
+      dockerfile: Dockerfile
+    container_name: auth_service
+    restart: always
+    ports:
+      - "8081:8081"
+    env_file: .env
+    depends_on:
+      - db
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway_service
+    restart: always
+    ports:
+      - "8082:8082"
+    env_file: .env
+    depends_on:
+      - auth-service
+      - backend
+
   frontend:
     build:
       context: ./frontend/frontend-app
@@ -33,7 +59,7 @@ services:
       - "${FRONTEND_PORT}:80"
     env_file: .env
     depends_on:
-    - backend
+      - backend
 
 volumes:
   db_data:
