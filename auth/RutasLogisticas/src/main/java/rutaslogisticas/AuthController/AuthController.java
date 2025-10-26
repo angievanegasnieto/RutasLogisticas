@@ -9,8 +9,6 @@ package rutaslogisticas.AuthController;
  * @author johan
  */
 
-
-
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
