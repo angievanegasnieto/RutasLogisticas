@@ -1,0 +1,86 @@
+<div class="page">
+  <h2>Historial y Reporte de Pedidos</h2>
+
+  <form [formGroup]="form" class="filters" (ngSubmit)="buscar()">
+    <div class="row">
+      <label>Estado</label>
+      <select formControlName="estado">
+        <option value="">(Todos)</option>
+        <option>ENTREGADO</option>
+        <option>EN_RUTA</option>
+        <option>PENDIENTE</option>
+        <option>ASIGNADO</option>
+        <option>FALLIDO</option>
+      </select>
+
+      <label>Cliente</label>
+      <input formControlName="cliente" placeholder="ACME..." />
+
+      <label>Destino</label>
+      <input formControlName="destino" placeholder="Bodega Norte..." />
+    </div>
+
+    <div class="row">
+      <label>Desde</label>
+      <input type="date" formControlName="desde" />
+      <label>Hasta</label>
+      <input type="date" formControlName="hasta" />
+
+      <label>Vehículo ID</label>
+      <input type="number" formControlName="vehiculoId" />
+
+      <label>Conductor ID</label>
+      <input type="number" formControlName="conductorId" />
+    </div>
+
+    <div class="actions">
+      <button type="submit">Buscar</button>
+      <button type="button" (click)="limpiar()">Limpiar</button>
+      <span class="spacer"></span>
+      <button type="button" (click)="descargarCsv()">CSV</button>
+      <button type="button" (click)="descargarPdf()">PDF</button>
+    </div>
+  </form>
+
+  <div class="table-wrap" *ngIf="!loading(); else loadingTpl">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Destino</th>
+          <th>Fecha Entrega</th>
+          <th>Costo</th>
+          <th>Vehículo</th>
+          <th>Conductor</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of paged()">
+          <td>{{ r.id }}</td>
+          <td>{{ r.cliente }}</td>
+          <td>{{ r.destino }}</td>
+          <td>{{ r.fechaEntrega || '-' }}</td>
+          <td>{{ r.costo ?? '-' }}</td>
+          <td>{{ r.vehiculoId ?? '-' }}</td>
+          <td>{{ r.conductorId ?? '-' }}</td>
+          <td>{{ r.estado ?? '-' }}</td>
+        </tr>
+        <tr *ngIf="total() === 0">
+          <td colspan="8" class="empty">Sin resultados</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="paginator" *ngIf="total() > pageSize()">
+      <button (click)="page.set(Math.max(1, page()-1))" [disabled]="page() === 1">‹</button>
+      <span>Página {{ page() }}</span>
+      <button (click)="page.set(page()+1)" [disabled]="(page()*pageSize()) >= total()">›</button>
+    </div>
+  </div>
+
+  <ng-template #loadingTpl>
+    <div class="loading">Cargando...</div>
+  </ng-template>
+</div>

@@ -1,0 +1,31 @@
+.page {
+  padding: 1rem;
+}
+h2 { margin: 0 0 1rem; }
+
+.filters {
+  display: grid;
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+.filters .row {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: .5rem;
+  align-items: center;
+}
+.filters label { font-size: .9rem; color: #444; }
+.filters input, .filters select { padding: .4rem .5rem; }
+
+.actions { display: flex; align-items: center; gap: .5rem; }
+.actions .spacer { flex: 1 1 auto; }
+.actions button { padding: .4rem .8rem; }
+
+.table-wrap { overflow: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: .5rem .6rem; border-bottom: 1px solid #e6e6e6; text-align: left; }
+thead th { background: #fafafa; }
+
+.empty { text-align: center; color: #777; padding: 1rem 0; }
+.paginator { display: flex; gap: .5rem; align-items: center; margin-top: .75rem; }
+.loading { padding: 1rem 0; }
