@@ -17,5 +17,7 @@ import rutaslogisticas.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByEmail(String email);
   boolean existsByEmail(String email);
+
+    public boolean existsByEmailAndIdNot(String email, Long id);
 }
 

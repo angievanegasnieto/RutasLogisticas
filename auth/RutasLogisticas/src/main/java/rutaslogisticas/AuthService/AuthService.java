@@ -9,7 +9,9 @@ package rutaslogisticas.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rutaslogisticas.JwtUtil.JwtUtil;
+import rutaslogisticas.Register.RegisterRequest;
 import rutaslogisticas.Repository.UserRepository;
+import rutaslogisticas.entity.Role;
 import rutaslogisticas.entity.User;
 
 @Service
@@ -22,18 +24,21 @@ public class AuthService {
     this.repo = repo; this.encoder = encoder; this.jwt = jwt;
   }
 
-  public User register(String name, String email, String rawPassword, String role) {
-    if (repo.existsByEmail(email)) throw new IllegalArgumentException("Email ya registrado");
-    User u = new User();
-    u.setName(name);
-    u.setEmail(email);
-    u.setPassword(encoder.encode(rawPassword));
-    u.setRole(role == null || role.isBlank() ? "USER" : role);
+  public User register(RegisterRequest req) {
+        if (repo.existsByEmail(req.getEmail())) {
+            throw new IllegalArgumentException("Email ya registrado");
+        }
+
+        User u = new User();
+        u.setName(req.getName());
+        u.setEmail(req.getEmail());
+        u.setPassword(encoder.encode(req.getPassword()));
+        u.setRole(req.getRole() != null ? req.getRole() : Role.OPERADOR);
     return repo.save(u);
   }
 
   public String createToken(User u) {
-    return jwt.generateToken(u.getEmail(), u.getRole());
+    return jwt.generateToken(u.getEmail(), u.getRole().name());
   }
 
   public User getByEmail(String email) {

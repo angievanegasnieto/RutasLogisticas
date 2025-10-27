@@ -1,5 +1,5 @@
 
-export type Role = 'ADMIN'|'USER';
+export type Role = 'ADMIN'|'CONDUCTOR'|'OPERADOR';
 
 export interface UserView {
   id: number;

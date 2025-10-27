@@ -1,6 +1,7 @@
 
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth.guard';
+import { adminGuard } from './core/admin.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -14,7 +15,9 @@ export const routes: Routes = [
       { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component')
           .then(m => m.DashboardComponent) },
       { path: 'profile', loadComponent: () => import('./pages/profile/profile.component')
-          .then(m => m.ProfileComponent) }
+          .then(m => m.ProfileComponent) },
+      { path: 'admin/users', canActivate: [adminGuard], loadComponent: () =>
+          import('./pages/admin/users-admin/users-admin.component').then(m => m.UsersAdminComponent) }
   ]},
 
   { path: '**', loadComponent: () => import('./pages/not-found/not-found.component')

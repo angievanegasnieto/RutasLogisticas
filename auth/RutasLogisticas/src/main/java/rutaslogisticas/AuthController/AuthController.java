@@ -35,12 +35,12 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
+  public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest reg) {
     try {
-      User u = authService.register(req.name, req.email, req.password, req.role);
+      User u = authService.register(reg);
       String token = authService.createToken(u);
       return ResponseEntity.status(201).body(new AuthResponse(
-        new UserView(u.getId(), u.getName(), u.getEmail(), u.getRole()), token));
+        new UserView(u.getId(), u.getName(), u.getEmail(), u.getRole().name()), token));
     } catch (IllegalArgumentException e) {
       return ResponseEntity.status(409).body(e.getMessage());
     }
@@ -54,13 +54,13 @@ public class AuthController {
     User u = authService.getByEmail(auth.getName());
     String token = authService.createToken(u);
     return ResponseEntity.ok(new AuthResponse(
-      new UserView(u.getId(), u.getName(), u.getEmail(), u.getRole()), token));
+      new UserView(u.getId(), u.getName(), u.getEmail(), u.getRole().name()), token));
   }
 
   @GetMapping("/me")
   public ResponseEntity<?> me(Authentication authentication) {
     if (authentication == null) return ResponseEntity.status(401).build();
     User u = authService.getByEmail(authentication.getName());
-    return ResponseEntity.ok(new UserView(u.getId(), u.getName(), u.getEmail(), u.getRole()));
+    return ResponseEntity.ok(new UserView(u.getId(), u.getName(), u.getEmail(), u.getRole().name()));
   }
 }

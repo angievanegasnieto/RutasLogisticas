@@ -10,8 +10,14 @@ export class AuthService {
   private base = environment.apiBase; // ej: http://localhost:8082
   private _user  = signal<UserView | null>(this.loadUser());
   private _token = signal<string | null>(localStorage.getItem('token'));
+  private logoutTimer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    const token = this._token();
+    if (token) {
+      this.applyTokenLifecycle(token);
+    }
+  }
 
   // señales readonly para quien quiera suscribirse
   user  = this._user.asReadonly();
@@ -20,7 +26,15 @@ export class AuthService {
   // getter cómodo para el interceptor
   get tokenValue(): string | null { return this._token(); }
 
-  isLoggedIn(): boolean { return !!this._token(); }
+  isLoggedIn(): boolean {
+    const token = this._token();
+    return !!token && !this.isTokenExpired(token);
+  }
+
+  isAdmin(): boolean {
+    const current = this._user();
+    return !!current && current.role === 'ADMIN';
+  }
 
   login(email: string, password: string) {
     return this.http.post<AuthResponse>(`${this.base}/auth/login`, { email, password });
@@ -40,19 +54,76 @@ export class AuthService {
     this._token.set(res.token);
     localStorage.setItem('token', res.token);
     localStorage.setItem('user', JSON.stringify(res.user));
+    this.applyTokenLifecycle(res.token);
   }
 
-  logout() {
+  logout(reason?: 'expired') {
     this._user.set(null);
     this._token.set(null);
+    this.clearAutoLogout();
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    // opcional: redirigir
-    // this.router.navigateByUrl('/login');
+    if (reason === 'expired') {
+      sessionStorage.setItem('sessionExpired', '1');
+    } else {
+      sessionStorage.removeItem('sessionExpired');
+    }
+    this.router.navigateByUrl('/login');
   }
 
   private loadUser(): UserView | null {
     try { return JSON.parse(localStorage.getItem('user') || 'null'); }
     catch { return null; }
+  }
+
+  private isTokenExpired(token: string): boolean {
+    const expiresAt = this.getTokenExpiration(token);
+    return expiresAt !== null && expiresAt <= Date.now();
+  }
+
+  private applyTokenLifecycle(token: string) {
+    const expiresAt = this.getTokenExpiration(token);
+    if (expiresAt === null) return;
+    const remaining = expiresAt - Date.now();
+    if (remaining <= 0) {
+      this.handleSessionExpiry();
+      return;
+    }
+    this.scheduleAutoLogout(remaining);
+  }
+
+  private handleSessionExpiry() {
+    this.logout('expired');
+  }
+
+  private scheduleAutoLogout(ms: number) {
+    this.clearAutoLogout();
+    this.logoutTimer = setTimeout(() => this.handleSessionExpiry(), ms);
+  }
+
+  private clearAutoLogout() {
+    if (this.logoutTimer) {
+      clearTimeout(this.logoutTimer);
+      this.logoutTimer = null;
+    }
+  }
+
+  private getTokenExpiration(token: string): number | null {
+    const payload = this.decodeTokenPayload(token);
+    if (!payload || typeof payload.exp !== 'number') return null;
+    return payload.exp * 1000;
+  }
+
+  private decodeTokenPayload(token: string): Record<string, unknown> | null {
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+    let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+    while (base64.length % 4 !== 0) base64 += '=';
+    try {
+      const decoded = globalThis.atob(base64);
+      return JSON.parse(decoded);
+    } catch {
+      return null;
+    }
   }
 }

@@ -11,18 +11,6 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
-  backend:
-    build:
-      context: ./backend/RutasLogisticas
-      dockerfile: Dockerfile
-    container_name: spring_backend
-    restart: always
-    ports:
-      - "${BACKEND_PORT}:8080"
-    env_file: .env
-    depends_on:
-      - db
-
   frontend:
     build:
       context: ./frontend/frontend-app
@@ -58,7 +46,6 @@ services:
     ports:
       - "${GATEWAY_PORT}:8082"
     depends_on:
-      - backend
       - auth-service
 
 volumes:

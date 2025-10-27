@@ -1,15 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package rutaslogisticas.CustomUserDetailsService;
-
-/**
- *
- * @author johan
- */
-
-
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,10 +21,19 @@ public class CustomUserDetailsService implements UserDetailsService {
         User u = repo.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Not found"));
 
+        // authority principal: ROLE_<ROL>
+        var authorities = java.util.List.of(
+                new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + u.getRole().name())
+        );
+
         return org.springframework.security.core.userdetails.User
                 .withUsername(u.getEmail())
                 .password(u.getPassword())
-                .roles(u.getRole())   // genera ROLE_USER, etc.
+                .authorities(authorities)   // usamos authorities en lugar de roles()
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .disabled(false)
                 .build();
     }
 }
