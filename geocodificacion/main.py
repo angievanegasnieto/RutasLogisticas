@@ -2,21 +2,34 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
 
-app = FastAPI(title="Microservicio de Geocodificación")
+app = FastAPI(
+    title="Microservicio de Geocodificación",
+    description="Convierte una dirección en coordenadas (latitud y longitud) usando la API gratuita de Nominatim (OpenStreetMap).",
+    version="1.0.0"
+)
 
 # Modelo de entrada
 class Direccion(BaseModel):
     direccion: str
 
-@app.post("/geocodificar/")
+# Modelo de salida
+class Coordenadas(BaseModel):
+    direccion: str
+    latitud: float
+    longitud: float
+
+@app.post("/geocodificar/", response_model=Coordenadas)
 def geocodificar(dato: Direccion):
     """
-    Servicio independiente que convierte una dirección en coordenadas.
-    Usa la API gratuita de Nominatim (OpenStreetMap).
+    Introduce una dirección y obtén sus coordenadas.
+    Ejemplo:
+    {
+        "direccion": "Calle 80 # 73a-20 Bogotá"
+    }
     """
-    url = f"https://nominatim.openstreetmap.org/search"
+    url = "https://nominatim.openstreetmap.org/search"
     params = {"q": dato.direccion, "format": "json"}
-    headers = {"User-Agent": "MiAppPruebaLorena"}
+    headers = {"User-Agent": "MicroservicioGeocodificacionLorena"}
 
     response = requests.get(url, params=params, headers=headers)
 
@@ -24,8 +37,8 @@ def geocodificar(dato: Direccion):
         data = response.json()[0]
         return {
             "direccion": dato.direccion,
-            "latitud": data["lat"],
-            "longitud": data["lon"]
+            "latitud": float(data["lat"]),
+            "longitud": float(data["lon"])
         }
     else:
-        return {"error": "No se encontraron coordenadas para esa dirección."}
+        return {"direccion": dato.direccion, "latitud": 0.0, "longitud": 0.0}
