@@ -34,6 +34,9 @@ public class User {
     @Column(nullable=false)
     private Instant createdAt = Instant.now();
 
+    @Column
+    private String avatarUrl;
+
     // --- getters y setters ---
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -52,5 +55,8 @@ public class User {
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+
+    public String getAvatarUrl() { return avatarUrl; }
+    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
 }
 

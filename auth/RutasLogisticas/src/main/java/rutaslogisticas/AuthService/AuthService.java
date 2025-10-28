@@ -49,6 +49,33 @@ public class AuthService {
   public void deleteById(Long id) {
     repo.deleteById(id);
   }
+
+  public User updateUser(Long id, rutaslogisticas.View.UpdateUserRequest req) {
+    User u = repo.findById(id).orElseThrow();
+    if (req.name != null && !req.name.isBlank()) u.setName(req.name);
+    if (req.email != null && !req.email.isBlank()) {
+      if (!req.email.equalsIgnoreCase(u.getEmail()) && repo.existsByEmail(req.email)) {
+        throw new IllegalArgumentException("Email ya registrado");
+      }
+      u.setEmail(req.email);
+    }
+    if (req.role != null && !req.role.isBlank()) u.setRole(req.role);
+    if (req.avatarUrl != null) u.setAvatarUrl(req.avatarUrl);
+    return repo.save(u);
+  }
+
+  public User promoteToAdmin(String email) {
+    User u = getByEmail(email);
+    u.setRole("ADMIN");
+    return repo.save(u);
+  }
+
+  // DEV-ONLY helper to reset password quickly during bootstrap/testing
+  public User setPassword(String email, String rawPassword) {
+    User u = getByEmail(email);
+    u.setPassword(encoder.encode(rawPassword));
+    return repo.save(u);
+  }
 }
 
 

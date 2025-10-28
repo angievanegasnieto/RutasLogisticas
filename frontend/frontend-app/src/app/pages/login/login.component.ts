@@ -11,7 +11,7 @@ import { AuthService } from '../../core/auth.service';
   template: `
   <div class="card" style="max-width:520px;margin:40px auto;">
     <h2 style="margin:0 0 10px;">Iniciar sesión</h2>
-    <p class="badge">rutas logisticas</p>
+    <p class="badge">rutas logísticas</p>
     <div class="row">
       <div class="col"><input class="input" placeholder="Email" [(ngModel)]="email"></div>
     </div>
@@ -20,7 +20,6 @@ import { AuthService } from '../../core/auth.service';
     </div>
     <div class="row">
       <div class="col"><button class="btn" (click)="doLogin()">Entrar</button></div>
-      <div class="col"><a routerLink="/register" class="btn secondary" style="display:inline-block;text-align:center">Crear cuenta</a></div>
     </div>
     <p *ngIf="error" style="color:#ef4444;margin-top:8px">{{error}}</p>
   </div>
@@ -33,7 +32,9 @@ export class LoginComponent{
 
   doLogin(){
     this.error = '';
-    this.auth.login(this.email, this.password).subscribe({
+    const email = (this.email || '').trim().toLowerCase();
+    const password = (this.password || '').trim();
+    this.auth.login(email, password).subscribe({
       next: res => { this.auth.saveSession(res); this.router.navigateByUrl('/dashboard'); },
       error: err => this.error = 'Credenciales inválidas'
     });

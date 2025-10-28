@@ -14,9 +14,11 @@ public class UserView {
   public String name;
   public String email;
   public String role;
+  public String createdAt;
+  public String avatarUrl;
 
-  public UserView(Long id, String name, String email, String role) {
-    this.id=id; this.name=name; this.email=email; this.role=role;
+  public UserView(Long id, String name, String email, String role, String createdAt, String avatarUrl) {
+    this.id=id; this.name=name; this.email=email; this.role=role; this.createdAt = createdAt; this.avatarUrl = avatarUrl;
   }
 }
 

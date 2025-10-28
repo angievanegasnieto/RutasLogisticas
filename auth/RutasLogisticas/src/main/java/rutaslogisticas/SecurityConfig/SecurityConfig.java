@@ -23,8 +23,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import rutaslogisticas.CustomUserDetailsService.CustomUserDetailsService;
 import rutaslogisticas.JwtAuthFilter.JwtAuthFilter;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @Configuration
+@EnableMethodSecurity
 public class SecurityConfig {
 
   @Bean
@@ -48,8 +50,7 @@ public class SecurityConfig {
   http.csrf(csrf -> csrf.disable())
      .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
      .authorizeHttpRequests(auth -> auth
-         .requestMatchers("/auth/**", "/actuator/health").permitAll()
-         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+         .requestMatchers("/auth/login", "/auth/dev/**", "/actuator/health").permitAll()
          .anyRequest().authenticated()
      )
      .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,3 +1,4 @@
+
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -17,8 +18,5 @@
     "useDefineForClassFields": false,
     "module": "ES2022",
     "lib": ["ES2022", "DOM"]
-  },
-  "sql": {
-    "updateUserRole": "UPDATE users SET role='ADMIN' WHERE email='diego@hotmail';"
   }
 }
