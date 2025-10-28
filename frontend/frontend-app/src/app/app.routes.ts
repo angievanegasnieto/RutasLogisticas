@@ -1,7 +1,7 @@
-
 import { Routes } from '@angular/router';
 import { authGuard } from './core/auth.guard';
 import { adminGuard } from './core/admin.guard';
+import { operatorGuard } from './core/operator.guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -16,6 +16,8 @@ export const routes: Routes = [
           .then(m => m.DashboardComponent) },
       { path: 'profile', loadComponent: () => import('./pages/profile/profile.component')
           .then(m => m.ProfileComponent) },
+      { path: 'clientes', canActivate: [operatorGuard], loadComponent: () =>
+          import('./clientes/clientes-list.component').then(m => m.ClientesListComponent) },
       { path: 'admin/users', canActivate: [adminGuard], loadComponent: () =>
           import('./pages/admin/users-admin/users-admin.component').then(m => m.UsersAdminComponent) }
   ]},

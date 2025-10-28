@@ -1,0 +1,68 @@
+<div class="page">
+  <header class="page-header">
+    <h2>Gestión de Clientes</h2>
+  </header>
+
+  <section class="card">
+    <h3 class="card-title">Registrar nuevo cliente</h3>
+    <form (ngSubmit)="crearCliente()" class="form">
+      <input
+        type="text"
+        [(ngModel)]="nuevo.nombre"
+        name="nombre"
+        placeholder="Nombre del cliente"
+        required
+      />
+      <input
+        type="text"
+        [(ngModel)]="nuevo.direccion"
+        name="direccion"
+        placeholder="Dirección"
+        required
+      />
+      <input
+        type="text"
+        [(ngModel)]="nuevo.telefono"
+        name="telefono"
+        placeholder="Teléfono"
+        required
+      />
+      <button type="submit" class="btn btn-primary">Crear cliente</button>
+    </form>
+    <div *ngIf="error" class="alert">{{ error }}</div>
+  </section>
+
+  <section class="card">
+    <div class="card-head">
+      <h3 class="card-title">Clientes registrados</h3>
+      <span class="badge">{{ clientes.length }}</span>
+    </div>
+
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th class="acciones">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of clientes">
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.direccion }}</td>
+            <td>{{ c.telefono }}</td>
+            <td class="acciones">
+              <!-- (Si necesitas editar, aquí va el botón Editar) -->
+              <button (click)="eliminar(c.id)" class="btn btn-danger">Eliminar</button>
+            </td>
+          </tr>
+          <tr *ngIf="!clientes.length">
+            <td colspan="4" class="empty">No hay clientes registrados aún.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

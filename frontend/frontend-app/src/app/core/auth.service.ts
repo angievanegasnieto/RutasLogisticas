@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { AuthResponse, UserView } from './models';
+import { AuthResponse, UserView, Role } from './models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -32,8 +32,16 @@ export class AuthService {
   }
 
   isAdmin(): boolean {
+    return this.hasRole('ADMIN');
+  }
+
+  hasRole(role: Role): boolean {
     const current = this._user();
-    return !!current && current.role === 'ADMIN';
+    return !!current && current.role === role;
+  }
+
+  isOperator(): boolean {
+    return this.hasRole('OPERADOR');
   }
 
   login(email: string, password: string) {
