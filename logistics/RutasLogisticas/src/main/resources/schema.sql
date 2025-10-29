@@ -1,0 +1,6 @@
+﻿CREATE TABLE IF NOT EXISTS clientes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre    VARCHAR(100) NOT NULL,
+  direccion VARCHAR(200) NOT NULL,
+  telefono  VARCHAR(50)  NOT NULL
+);
