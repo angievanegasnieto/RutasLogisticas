@@ -1,0 +1,3 @@
+-- MySQL init: ensure DB exists; tables are managed by Hibernate (ddl-auto=update)
+CREATE DATABASE IF NOT EXISTS logisticsdb;
+USE logisticsdb;

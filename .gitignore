@@ -1,0 +1,17 @@
+# Node / Angular
+node_modules/
+dist/
+
+# Java / Spring Boot
+target/
+*.jar
+*.war
+
+# IDEs / Sistema
+.vscode/
+.idea/
+.DS_Store
+*.iml
+
+# Logs
+*.log
