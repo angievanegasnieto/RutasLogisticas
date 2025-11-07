@@ -1,0 +1,93 @@
+<div class="pedidos-wrapper">
+
+  <section class="card">
+    <h2>Gestión de Pedidos</h2>
+
+    <form class="form-grid" (ngSubmit)="modoEdicion ? actualizarPedido() : crearPedido()">
+      <div class="row">
+
+        <!-- ✅ Cliente (ahora texto editable, no ID) -->
+        <label>Cliente
+          <input type="text" [(ngModel)]="nuevoPedido.cliente" name="cliente" required placeholder="Nombre del cliente" />
+        </label>
+
+        <!-- ✅ Dirección (texto editable, no ID) -->
+        <label>Dirección
+          <input type="text" [(ngModel)]="nuevoPedido.direccion" name="direccion" required placeholder="Dirección del pedido" />
+        </label>
+
+        <label>Producto
+          <input type="text" [(ngModel)]="nuevoPedido.producto" name="producto" required placeholder="Producto solicitado" />
+        </label>
+
+        <label>Fecha
+          <input type="date" [(ngModel)]="nuevoPedido.fechaProgramada" name="fechaProgramada" required />
+        </label>
+
+        <label>Cantidad
+          <input type="number" [(ngModel)]="nuevoPedido.cantidad" name="cantidad" required min="1" />
+        </label>
+
+        <label>Estado
+          <select [(ngModel)]="nuevoPedido.estado" name="estado" required>
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="CONFIRMADO">Confirmado</option>
+            <option value="ASIGNADO">Asignado</option>
+            <option value="ENTREGADO">Entregado</option>
+          </select>
+        </label>
+
+      </div>
+
+      <div class="actions">
+        <button *ngIf="modoEdicion"
+                type="button"
+                class="btn btn-secondary"
+                (click)="cancelarEdicion()">Cancelar edición</button>
+
+        <button [disabled]="!nuevoPedido.producto || !nuevoPedido.fechaProgramada"
+                class="btn"
+                type="submit"
+                [ngClass]="modoEdicion ? 'btn-success' : 'btn-primary'">
+          {{ modoEdicion ? 'Actualizar Pedido' : 'Agregar Pedido' }}
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="tabla-card">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Dirección</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of pedidos">
+          <td>{{ p.id }}</td>
+          <td>{{ p.cliente }}</td>
+          <td>{{ p.direccion }}</td>
+          <td>{{ p.producto }}</td>
+          <td>{{ p.cantidad }}</td>
+          <td>{{ p.fechaProgramada }}</td>
+          <td>
+            <span class="badge" [ngClass]="p.estado?.toLowerCase()">{{ p.estado }}</span>
+          </td>
+          <td class="acciones">
+            <button class="btn btn-warning btn-sm" (click)="editarPedido(p)">Editar</button>
+            <button class="btn btn-danger btn-sm" (click)="eliminarPedido(p.id!)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
