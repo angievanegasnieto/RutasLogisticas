@@ -1,0 +1,143 @@
+<div class="pedidos-wrapper">
+
+  <section class="card">
+    <h2>Gestión de Pedidos</h2>
+
+    <form class="form-grid" (ngSubmit)="modoEdicion ? actualizarPedido() : crearPedido()">
+      <div class="row">
+
+        <!-- ✅ Cliente (selector) -->
+        <label>Cliente *
+          <select [(ngModel)]="nuevoPedido.clienteId" name="clienteId" required (change)="onClienteChange()">
+            <option [value]="undefined">Seleccionar cliente</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.nombre }}</option>
+          </select>
+        </label>
+
+        <!-- ✅ Dirección (texto de solo lectura, se carga automáticamente) -->
+        <label>Dirección *
+          <input type="text" 
+                 [value]="direccionSeleccionadaTexto" 
+                 name="direccion" 
+                 readonly 
+                 placeholder="Se cargará automáticamente al seleccionar cliente"
+                 style="background-color: #2a2a2a; cursor: not-allowed;" />
+          <span *ngIf="geocodificando" class="loading-text">📍 Geocodificando...</span>
+        </label>
+
+        <label>Producto
+          <input type="text" [(ngModel)]="nuevoPedido.producto" name="producto" placeholder="Producto solicitado" />
+        </label>
+
+        <label>Fecha *
+          <input type="date" [(ngModel)]="nuevoPedido.fechaProgramada" name="fechaProgramada" required />
+        </label>
+
+        <label>Cantidad
+          <input type="number" [(ngModel)]="nuevoPedido.cantidad" name="cantidad" min="1" />
+        </label>
+
+        <label>Ventana Inicio
+          <input type="time" [(ngModel)]="nuevoPedido.ventanaInicio" name="ventanaInicio" />
+        </label>
+
+        <label>Ventana Fin
+          <input type="time" [(ngModel)]="nuevoPedido.ventanaFin" name="ventanaFin" />
+        </label>
+
+        <label>Volumen (m³)
+          <input type="number" [(ngModel)]="nuevoPedido.volumen" name="volumen" step="0.1" min="0" />
+        </label>
+
+        <label>Peso (kg)
+          <input type="number" [(ngModel)]="nuevoPedido.peso" name="peso" step="0.1" min="0" />
+        </label>
+
+        <!-- Conductor (opcional) -->
+        <label>Conductor
+          <select [(ngModel)]="nuevoPedido.conductorId" name="conductorId">
+            <option [value]="undefined">Sin asignar</option>
+            <option *ngFor="let c of conductores" [value]="c.id">{{ c.nombre }} {{ c.apellidos || '' }}</option>
+          </select>
+        </label>
+
+        <!-- Estado (solo en modo edición) -->
+        <label *ngIf="modoEdicion">Estado *
+          <select [(ngModel)]="nuevoPedido.estado" name="estado">
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="ASIGNADO">Asignado</option>
+            <option value="EN_RUTA">En Ruta</option>
+            <option value="ENTREGADO">Entregado</option>
+            <option value="FALLIDO">Fallido</option>
+            <option value="REINTENTO">Reintento</option>
+          </select>
+        </label>
+
+      </div>
+
+      <div class="actions">
+        <button *ngIf="modoEdicion"
+                type="button"
+                class="btn btn-secondary"
+                (click)="cancelarEdicion()">Cancelar edición</button>
+
+        <button [disabled]="!nuevoPedido.clienteId || !nuevoPedido.direccionId || !nuevoPedido.fechaProgramada"
+                class="btn"
+                type="submit"
+                [ngClass]="modoEdicion ? 'btn-success' : 'btn-primary'">
+          {{ modoEdicion ? 'Actualizar Pedido' : 'Agregar Pedido' }}
+        </button>
+      </div>
+    </form>
+
+    <!-- ✅ Mapa de ubicación -->
+    <div *ngIf="mostrarMapa" class="mapa-container" style="margin-top: 20px;">
+      <h3 style="margin-bottom: 10px; color: #e0e0e0;">📍 Ubicación de entrega</h3>
+      <app-map 
+        [markers]="mapMarkers" 
+        [height]="'350px'"
+        [autoFitBounds]="true">
+      </app-map>
+    </div>
+  </section>
+
+  <section class="tabla-card">
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Dirección</th>
+          <th>Ciudad</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Conductor</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of pedidos">
+          <td>{{ p.id }}</td>
+          <td>{{ p.clienteNombre || p.cliente }}</td>
+          <td>{{ p.direccionCompleta || p.direccion }}</td>
+          <td>{{ p.ciudad || '-' }}</td>
+          <td>{{ p.producto || '-' }}</td>
+          <td>{{ p.cantidad || '-' }}</td>
+          <td>{{ p.fechaProgramada }}</td>
+          <td>
+            <span class="badge" [ngClass]="p.estado?.toLowerCase()">{{ p.estado }}</span>
+          </td>
+          <td>{{ p.conductorNombre || (p.conductorId ? ('ID ' + p.conductorId) : '-') }}</td>
+          <td class="acciones">
+            <button class="btn btn-warning btn-sm" (click)="editarPedido(p)">Editar</button>
+            <button class="btn btn-danger btn-sm" (click)="eliminarPedido(p.id!)">Eliminar</button>
+            <button class="btn btn-info btn-sm" (click)="openAssignDialog(p)">Asignar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
