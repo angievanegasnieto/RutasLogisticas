@@ -1,0 +1,264 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="header-gradient mb-4">
+    <h2 class="mb-0">
+      <i class="fas fa-route me-2"></i>
+      Rutas de Conductores
+    </h2>
+    <p class="mb-0 mt-2">Visualización de rutas optimizadas para entregas</p>
+  </div>
+
+  <!-- Vista: Lista de Conductores -->
+  <div *ngIf="!mostrarMapa" class="row">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-users me-2"></i>
+            Conductores con Rutas Asignadas
+          </h5>
+          <button class="btn btn-sm btn-outline-primary" (click)="refrescar()">
+            <i class="fas fa-sync-alt me-1"></i>
+            Refrescar
+          </button>
+        </div>
+
+        <div class="card-body">
+          <!-- Mensaje si no hay conductores -->
+          <div *ngIf="conductores.length === 0" class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            No hay conductores con pedidos asignados en este momento.
+          </div>
+
+          <!-- Tabla de conductores -->
+          <div *ngIf="conductores.length > 0" class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th><i class="fas fa-user me-1"></i> Conductor</th>
+                  <th><i class="fas fa-box me-1"></i> Pedidos</th>
+                  <th><i class="fas fa-road me-1"></i> Distancia</th>
+                  <th><i class="fas fa-clock me-1"></i> Duración Est.</th>
+                  <th class="text-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let conductor of conductores">
+                  <td>
+                    <strong>{{ conductor.conductorNombre }}</strong>
+                  </td>
+                  <td>
+                    <span class="badge bg-primary">{{ conductor.numeroPedidos }}</span>
+                  </td>
+                  <td>
+                    <i class="fas fa-route me-1 text-muted"></i>
+                    {{ conductor.distanciaTotal }} km
+                  </td>
+                  <td>
+                    <i class="fas fa-hourglass-half me-1 text-muted"></i>
+                    {{ conductor.duracionTotal }} min
+                  </td>
+                  <td class="text-center">
+                    <button 
+                      class="btn btn-sm btn-success"
+                      (click)="verRutaConductor(conductor.conductorId)"
+                      title="Ver ruta en mapa">
+                      <i class="fas fa-map-marked-alt me-1"></i>
+                      Ver Ruta
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista: Mapa y Detalles de Ruta -->
+  <div *ngIf="mostrarMapa && rutaOptimizada" class="row">
+    <!-- Controles superiores -->
+    <div class="col-12 mb-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-outline-secondary" (click)="volverALista()">
+          <i class="fas fa-arrow-left me-2"></i>
+          Volver a la lista
+        </button>
+        <div>
+          <button class="btn btn-outline-primary me-2" (click)="exportarReporte()">
+            <i class="fas fa-download me-1"></i>
+            Exportar JSON
+          </button>
+          <button class="btn btn-outline-info" (click)="imprimirRuta()">
+            <i class="fas fa-print me-1"></i>
+            Imprimir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información de la ruta -->
+    <div class="col-12 col-lg-4 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-gradient-primary text-white">
+          <h5 class="mb-0">
+            <i class="fas fa-info-circle me-2"></i>
+            Información de Ruta
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- Conductor -->
+          <div class="info-item mb-3">
+            <div class="info-label">
+              <i class="fas fa-user-circle me-2 text-primary"></i>
+              Conductor
+            </div>
+            <div class="info-value">{{ rutaOptimizada.conductorNombre }}</div>
+          </div>
+
+          <!-- Origen -->
+          <div class="info-item mb-3">
+            <div class="info-label">
+              <i class="fas fa-home me-2 text-info"></i>
+              Punto de Origen
+            </div>
+            <div class="info-value small">{{ rutaOptimizada.origen.direccion }}</div>
+          </div>
+
+          <hr>
+
+          <!-- Estadísticas -->
+          <div class="row text-center mb-3">
+            <div class="col-6">
+              <div class="stat-card bg-light p-3 rounded">
+                <div class="stat-icon text-primary mb-2">
+                  <i class="fas fa-box fa-2x"></i>
+                </div>
+                <div class="stat-value">{{ rutaOptimizada.rutaInfo.numeroPedidos }}</div>
+                <div class="stat-label">Entregas</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stat-card bg-light p-3 rounded">
+                <div class="stat-icon text-success mb-2">
+                  <i class="fas fa-road fa-2x"></i>
+                </div>
+                <div class="stat-value">{{ rutaOptimizada.rutaInfo.distanciaTotal }} km</div>
+                <div class="stat-label">Distancia</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row text-center">
+            <div class="col-12">
+              <div class="stat-card bg-light p-3 rounded">
+                <div class="stat-icon text-warning mb-2">
+                  <i class="fas fa-clock fa-2x"></i>
+                </div>
+                <div class="stat-value">{{ rutaOptimizada.rutaInfo.duracionTotal }} min</div>
+                <div class="stat-label">Duración Estimada</div>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <!-- Leyenda -->
+          <div class="leyenda">
+            <h6 class="fw-bold mb-3">
+              <i class="fas fa-map-signs me-2"></i>
+              Leyenda
+            </h6>
+            <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-map-marker-alt fa-lg me-2" style="color: #007bff;"></i>
+              <span>Punto de origen</span>
+            </div>
+            <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-map-marker-alt fa-lg me-2" style="color: #dc2626;"></i>
+              <span>Punto de entrega</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <div class="linea-ruta me-2"></div>
+              <span>Ruta optimizada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mapa -->
+    <div class="col-12 col-lg-8 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="fas fa-map me-2"></i>
+            Mapa de Ruta Optimizada
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <div id="map" style="height: 500px; width: 100%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de entregas -->
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0">
+            <i class="fas fa-list-ol me-2"></i>
+            Orden de Entregas ({{ rutaOptimizada.puntosEntrega.length }})
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover tabla-entregas">
+              <thead class="table-light">
+                <tr>
+                  <th width="5%">#</th>
+                  <th>Cliente</th>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Dirección</th>
+                  <th>Ciudad</th>
+                  <th width="10%">Estado</th>
+                  <th width="15%">Coordenadas</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let punto of rutaOptimizada.puntosEntrega" class="entrega-row">
+                  <td>
+                    <span class="orden-badge">{{ punto.orden }}</span>
+                  </td>
+                  <td>
+                    <strong>{{ punto.clienteNombre }}</strong>
+                  </td>
+                  <td>{{ punto.producto }}</td>
+                  <td>
+                    <span class="badge bg-secondary">{{ punto.cantidad }}</span>
+                  </td>
+                  <td>
+                    <small>{{ punto.direccion }}</small>
+                  </td>
+                  <td>{{ punto.ciudad }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="'bg-' + getBadgeClass(punto.estado)">
+                      {{ punto.estado }}
+                    </span>
+                  </td>
+                  <td>
+                    <small class="text-muted">
+                      <i class="fas fa-map-pin me-1"></i>
+                      {{ punto.latitud.toFixed(4) }}, {{ punto.longitud.toFixed(4) }}
+                    </small>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

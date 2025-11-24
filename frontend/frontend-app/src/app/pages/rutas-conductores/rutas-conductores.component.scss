@@ -1,0 +1,219 @@
+// 🎨 Estilos para Rutas de Conductores
+
+.header-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  
+  .card-header {
+    border-radius: 12px 12px 0 0;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+  }
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+// 📊 Información de ruta
+.info-item {
+  .info-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+  }
+
+  .info-value {
+    font-size: 1rem;
+    color: #212529;
+    font-weight: 500;
+  }
+}
+
+// 📈 Tarjetas de estadísticas
+.stat-card {
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  .stat-icon {
+    opacity: 0.8;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #212529;
+    margin: 0.5rem 0;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+  }
+}
+
+// 🗺️ Leyenda
+.leyenda {
+  font-size: 0.9rem;
+
+  .linea-ruta {
+    width: 30px;
+    height: 3px;
+    background: #3b82f6;
+    border-radius: 2px;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6 50%, transparent 50%);
+      background-size: 10px 100%;
+    }
+  }
+}
+
+// 📋 Tabla de entregas
+.tabla-entregas {
+  font-size: 0.9rem;
+
+  .entrega-row {
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+
+  .orden-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+}
+
+// 🎨 Badges personalizados
+.badge {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+// 🗺️ Estilos del mapa
+#map {
+  border-radius: 0 0 12px 12px;
+}
+
+// 📱 Responsive
+@media (max-width: 768px) {
+  .header-gradient {
+    padding: 1.5rem;
+
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .stat-value {
+    font-size: 1.2rem !important;
+  }
+
+  #map {
+    height: 400px !important;
+  }
+}
+
+// 🖨️ Estilos de impresión
+@media print {
+  .btn,
+  .card-header button {
+    display: none !important;
+  }
+
+  #map {
+    page-break-inside: avoid;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #dee2e6 !important;
+  }
+}
+
+// ✨ Animaciones
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+// 🎯 Marcadores personalizados en mapa
+.numero-entrega {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+// 🔘 Botones personalizados
+.btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+  }
+}
+
+.btn-outline-primary {
+  border-width: 2px;
+  font-weight: 600;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+  }
+}
+
+.btn-outline-secondary,
+.btn-outline-info {
+  border-width: 2px;
+  font-weight: 600;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}

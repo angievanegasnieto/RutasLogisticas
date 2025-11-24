@@ -1,0 +1,150 @@
+<div class="mapa-pedidos-wrapper">
+  
+  <!-- Sección de Selección de Pedido -->
+  <section class="card">
+    <h2>🗺️ Geocodificación de Pedidos</h2>
+    <p class="subtitle">Selecciona un pedido para ver o geocodificar su ubicación</p>
+
+    <div class="selector-container">
+      <label class="selector-label">
+        <span class="label-text">Seleccionar Pedido:</span>
+        <select 
+          class="pedido-select" 
+          [disabled]="cargandoPedidos || geocodificando"
+          (change)="onPedidoChange($any($event.target).value)">
+          <option value="">{{ cargandoPedidos ? 'Cargando pedidos...' : 'Selecciona un pedido' }}</option>
+          <option *ngFor="let pedido of pedidos" [value]="pedido.id">
+            Pedido #{{ pedido.id }} - {{ pedido.clienteNombre || pedido.cliente || 'Sin cliente' }} - 
+            {{ pedido.producto || 'Sin producto' }} - {{ pedido.fechaProgramada }}
+            {{ pedido.latitud && pedido.longitud ? '✅' : '❌' }}
+          </option>
+        </select>
+        <span *ngIf="geocodificando" class="loading-text">📍 Geocodificando...</span>
+      </label>
+    </div>
+
+    <!-- Información del pedido seleccionado -->
+    <div *ngIf="pedidoSeleccionado" class="pedido-info">
+      <h3>📦 Información del Pedido #{{ pedidoSeleccionado.id }}</h3>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Cliente:</span>
+          <span class="info-value">{{ pedidoSeleccionado.clienteNombre || pedidoSeleccionado.cliente || '-' }}</span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Dirección:</span>
+          <span class="info-value">{{ pedidoSeleccionado.direccionCompleta || pedidoSeleccionado.direccion || '-' }}</span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Ciudad:</span>
+          <span class="info-value">{{ pedidoSeleccionado.ciudad || '-' }}</span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Producto:</span>
+          <span class="info-value">{{ pedidoSeleccionado.producto || '-' }}</span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Cantidad:</span>
+          <span class="info-value">{{ pedidoSeleccionado.cantidad || '-' }}</span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Fecha Programada:</span>
+          <span class="info-value">{{ pedidoSeleccionado.fechaProgramada || '-' }}</span>
+        </div>
+        
+        <div class="info-item">
+          <span class="info-label">Estado:</span>
+          <span class="estado" [class]="'estado-' + pedidoSeleccionado.estado?.toLowerCase()">
+            {{ pedidoSeleccionado.estado }}
+          </span>
+        </div>
+        
+        <div class="info-item full-width">
+          <span class="info-label">Coordenadas:</span>
+          <span *ngIf="pedidoSeleccionado.latitud && pedidoSeleccionado.longitud" class="coordenadas-large">
+            ✅ Lat: {{ pedidoSeleccionado.latitud }}, Lon: {{ pedidoSeleccionado.longitud }}
+          </span>
+          <span *ngIf="!pedidoSeleccionado.latitud || !pedidoSeleccionado.longitud" class="sin-coordenadas-large">
+            ❌ Sin coordenadas (se geocodificará automáticamente)
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mapa del pedido seleccionado -->
+    <div *ngIf="mostrarMapa && pedidoSeleccionado" class="mapa-container">
+      <h3>📍 Ubicación del Pedido</h3>
+      <app-map 
+        [markers]="mapMarkers" 
+        [height]="'500px'"
+        [autoFitBounds]="true">
+      </app-map>
+    </div>
+  </section>
+
+  <!-- Sección de Mapa con todos los pedidos -->
+  <section class="card">
+    <h2>🗺️ Mapa de todos los pedidos</h2>
+    <p class="subtitle">{{ pedidosConCoordenadas }} de {{ pedidos.length }} pedidos tienen coordenadas</p>
+    
+    <div class="mapa-container-full" *ngIf="pedidosConCoordenadas > 0">
+      <app-map 
+        [markers]="mapMarkers" 
+        [height]="'600px'"
+        [autoFitBounds]="true">
+      </app-map>
+    </div>
+
+    <div *ngIf="pedidosConCoordenadas === 0" class="empty-state">
+      <p>⚠️ No hay pedidos con coordenadas para mostrar en el mapa.</p>
+      <p>Selecciona un pedido arriba para geocodificarlo automáticamente.</p>
+    </div>
+  </section>
+
+  <!-- Tabla de pedidos -->
+  <section class="tabla-card">
+    <h3>📋 Lista de Pedidos Recientes</h3>
+    <table class="tabla">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cliente</th>
+          <th>Dirección</th>
+          <th>Ciudad</th>
+          <th>Coordenadas</th>
+          <th>Estado</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pedido of pedidos.slice(0, 10)">
+          <td>{{ pedido.id }}</td>
+          <td>{{ pedido.clienteNombre || pedido.cliente }}</td>
+          <td>{{ pedido.direccionCompleta || pedido.direccion }}</td>
+          <td>{{ pedido.ciudad || '-' }}</td>
+          <td>
+            <span *ngIf="pedido.latitud && pedido.longitud" class="coordenadas">
+              ✅ {{ pedido.latitud }}, {{ pedido.longitud }}
+            </span>
+            <span *ngIf="!pedido.latitud || !pedido.longitud" class="sin-coordenadas">
+              ❌ Sin coordenadas
+            </span>
+          </td>
+          <td>
+            <span class="estado" [class]="'estado-' + pedido.estado?.toLowerCase()">
+              {{ pedido.estado }}
+            </span>
+          </td>
+          <td>{{ pedido.fechaProgramada }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>

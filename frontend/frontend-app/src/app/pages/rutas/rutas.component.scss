@@ -1,0 +1,345 @@
+// 🎨 Estilos para Rutas del Conductor - Tema Oscuro Consistente
+
+/* ---- Paleta (igual que pedidos) ---- */
+$bg-900: #0b1220;
+$bg-800: #0f1824;
+$bg-700: #122031;
+$blue-500: #2f6df6;
+$blue-400: #5ea0ff;
+$gray-300: #c8d3e5;
+$white: #e9f0ff;
+$danger: #e55353;
+$warning: #e0a800;
+$success: #21c063;
+$info: #17a2b8;
+
+:host {
+  display: block;
+  color: $white;
+  background: $bg-900;
+  min-height: 100vh;
+}
+
+.container-fluid {
+  padding: 1.5rem;
+}
+
+.header-gradient {
+  background: linear-gradient(135deg, rgba(47, 109, 246, 0.25) 0%, rgba(94, 160, 255, 0.15) 100%);
+  color: $white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  background: $bg-800;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  
+  .card-header {
+    background: rgba(46, 90, 175, 0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px 10px 0 0;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    color: $white;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  padding: .5rem .9rem;
+  color: #fff;
+  cursor: pointer;
+  transition: filter .2s ease, transform .05s ease;
+
+  &:hover { filter: brightness(1.1); }
+  &:active { transform: scale(.98); }
+}
+
+.btn-outline-primary {
+  background: transparent;
+  border: 1px solid $blue-500;
+  color: $blue-400;
+
+  &:hover {
+    background: rgba(47, 109, 246, 0.15);
+  }
+}
+
+.btn-outline-info {
+  background: transparent;
+  border: 1px solid $info;
+  color: $info;
+
+  &:hover {
+    background: rgba(23, 162, 184, 0.15);
+  }
+}
+
+// 📊 Tarjetas de estadísticas (estilo oscuro sin gradientes de color)
+.stat-card {
+  background: $bg-700;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  border-radius: 10px;
+  color: $white;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    border-color: rgba(94, 160, 255, 0.3);
+  }
+
+  .stat-icon {
+    font-size: 2.5rem;
+    opacity: 0.8;
+    margin-bottom: 1rem;
+    color: $blue-400;
+  }
+
+  .stat-content {
+    .stat-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+      color: $gray-300;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      line-height: 1;
+      color: $white;
+    }
+
+    .stat-value-small {
+      font-size: 0.9rem;
+      font-weight: 600;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      color: $white;
+    }
+  }
+}
+
+// 🗺️ Leyenda compacta en header del mapa
+.leyenda-compact {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: $gray-300;
+}
+
+// 📋 Tabla de entregas
+.tabla-entregas {
+  font-size: 0.9rem;
+  color: $white;
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    th {
+      text-align: left;
+      padding: .7rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, rgba(46,90,175,.25), rgba(48,102,208,.15));
+      border-bottom: 1px solid rgba(255,255,255,0.14);
+      color: $white;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.2s;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+
+      &:hover {
+        background-color: rgba(255,255,255,0.05);
+      }
+    }
+
+    td {
+      padding: .7rem;
+      color: $white;
+    }
+  }
+
+  .orden-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, $blue-500 0%, $blue-400 100%);
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+}
+
+.alert {
+  background: rgba(47, 109, 246, 0.15);
+  border: 1px solid rgba(94, 160, 255, 0.3);
+  color: $blue-400;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+}
+
+// 🎨 Badges
+.badge {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.bg-secondary { background: rgba(96, 125, 139, 0.3); color: #90a4ae; }
+.bg-warning { background: rgba(224, 168, 0, 0.2); color: $warning; }
+.bg-success { background: rgba(33, 192, 99, 0.2); color: $success; }
+.bg-danger { background: rgba(229, 83, 83, 0.2); color: $danger; }
+.bg-primary { background: rgba(47, 109, 246, 0.2); color: $blue-400; }
+.bg-info { background: rgba(23, 162, 184, 0.2); color: $info; }
+
+// 🚫 Estado vacío
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: $gray-300;
+
+  i {
+    opacity: 0.5;
+    color: $blue-400;
+  }
+
+  h4 {
+    color: $white;
+    margin-bottom: 0.5rem;
+  }
+
+  .text-muted {
+    color: $gray-300;
+  }
+}
+
+// Loading
+.spinner-border {
+  color: $blue-400;
+}
+
+.text-muted {
+  color: $gray-300 !important;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .header-gradient {
+    padding: 1.5rem;
+
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .stat-card-horizontal {
+    min-height: 80px;
+
+    .stat-value-horizontal-large {
+      font-size: 2rem !important;
+    }
+
+    .stat-icon-horizontal {
+      i {
+        font-size: 2rem !important;
+      }
+    }
+  }
+
+  .leyenda-compact {
+    display: none !important;
+  }
+
+  #map {
+    height: 500px !important;
+    min-height: 500px !important;
+  }
+}
+
+// 🖨️ Impresión
+@media print {
+  .btn {
+    display: none !important;
+  }
+
+  #map {
+    page-break-inside: avoid;
+  }
+
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #dee2e6 !important;
+  }
+}
+
+// ✨ Animaciones
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+// 🎯 Marcadores
+.numero-entrega {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+// 🔘 Botones
+.btn-primary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+  }
+}
+
+.btn-outline-primary,
+.btn-outline-info {
+  border-width: 2px;
+  font-weight: 600;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
